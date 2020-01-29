@@ -1,0 +1,23 @@
+version: '2'
+
+services:
+  dev:
+    image: openjdk:11-jdk
+    working_dir: /work
+    entrypoint: ""
+    command: bash
+    volumes:
+      - .:/work
+      - gradle-cache:/root/.gradle
+      - test-results:/work/build/test-results/`
+    ports:
+      - "8080:8080"
+    environment:
+      IP_BASED_LIMIT_PER_HOUR: 100
+      USER_BASED_LIMIT_PER_HOUR: 100
+
+volumes:
+  gradle-cache:
+    external: true
+  test-results:
+    external: true
