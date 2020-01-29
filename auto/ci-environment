@@ -1,0 +1,9 @@
+#!/bin/bash -eu
+
+cd $(dirname $0)/..
+
+trap "docker-compose down --volume" 0
+docker volume create --name gradle-cache >/dev/null
+docker volume create --name test-results >/dev/null
+
+docker-compose run --rm --no-deps dev "${@-bash}"
