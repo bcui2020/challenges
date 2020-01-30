@@ -1,4 +1,4 @@
-package com.airtasker.challenge.controller;
+package com.airtasker.challenge.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,12 +12,6 @@ public class MainController {
   @ResponseBody
   public String home() {
     return "ip based rate limiter";
-  }
-
-  @RequestMapping(method = RequestMethod.GET, path = "/user-based", produces = "application/json")
-  @ResponseBody
-  public String home2() {
-    return "user based rate limiter";
   }
 
 }
