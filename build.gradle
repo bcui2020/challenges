@@ -12,6 +12,15 @@ repositories {
     mavenCentral()
 }
 
+jar {
+    archiveBaseName = 'rate-limiter'
+    archiveVersion = '0.1.0'
+}
+
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -21,4 +30,11 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+bootRun {
+    environment = [
+            'IP_BASED_LIMIT_PER_HOUR'  : '10',
+            'USER_BASED_LIMIT_PER_HOUR': '10',
+    ]
 }

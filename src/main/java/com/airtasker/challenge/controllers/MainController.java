@@ -14,4 +14,10 @@ public class MainController {
     return "ip based rate limiter";
   }
 
+  @RequestMapping(method = RequestMethod.GET, path = "/user-based", produces = "application/json")
+  @ResponseBody
+  public String home2() {
+    return "user based rate limiter";
+  }
+
 }

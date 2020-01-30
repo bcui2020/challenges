@@ -2,4 +2,4 @@
 
 cd $(dirname $0)/..
 
-auto/ci-environment ./gradlew check jacocoTestReport
+auto/ci-environment ./gradlew check

@@ -1,4 +1,4 @@
-package airtasker.challenge.ratelimiter.controllers;
+package com.airtasker.challenge.controllers;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 

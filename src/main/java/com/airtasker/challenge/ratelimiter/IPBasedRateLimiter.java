@@ -3,7 +3,11 @@ package com.airtasker.challenge.ratelimiter;
 import com.airtasker.challenge.ratelimiter.core.LazyRefillRateLimiter;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+@Component
+@Scope("prototype")
 public class IPBasedRateLimiter implements RateLimiter<String>{
 
   private ConcurrentHashMap<String, LazyRefillRateLimiter> ipBasedRateLimiter;
