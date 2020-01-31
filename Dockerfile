@@ -4,7 +4,7 @@ ENV PORT 8080
 EXPOSE $PORT
 
 WORKDIR /app
-COPY build/libs/ratelimiter.jar app.jar
+COPY build/libs/challenge.jar app.jar
 COPY run run
 
 RUN adduser --disabled-password --gecos rate-limiter rate-limiter

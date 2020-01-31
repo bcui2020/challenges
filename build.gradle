@@ -5,7 +5,6 @@ plugins {
 }
 
 group = 'com.airtasker'
-version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
@@ -13,9 +12,11 @@ repositories {
 }
 
 jar {
-    archiveBaseName = 'rate-limiter'
+    archiveFileName = 'challenge'
     archiveVersion = '0.1.0'
 }
+
+
 
 wrapper {
     distributionType = Wrapper.DistributionType.ALL
