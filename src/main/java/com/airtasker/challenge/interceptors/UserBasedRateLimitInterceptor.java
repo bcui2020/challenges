@@ -1,12 +1,13 @@
 package com.airtasker.challenge.interceptors;
 
-import com.airtasker.challenge.ratelimiter.UserBasedRateLimiter;
+import com.airtasker.challenge.ratelimiter.RateLimiter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -16,10 +17,18 @@ public class UserBasedRateLimitInterceptor extends HandlerInterceptorAdapter {
 
   private static final Logger logger = LoggerFactory.getLogger(IPBasedRateLimiterInterceptor.class);
 
-  @Autowired
-  private UserBasedRateLimiter userBasedRateLimiter;
+  private int requestPerHour;
 
-  public UserBasedRateLimitInterceptor(UserBasedRateLimiter userBasedRateLimiter) {
+  private RateLimiter<String> userBasedRateLimiter;
+
+  @Autowired
+  public UserBasedRateLimitInterceptor(@Value("${ratelimiter.userbased.limit}") final int requestPerHour) {
+    this.requestPerHour = requestPerHour;
+    this.userBasedRateLimiter = new RateLimiter<>(requestPerHour);
+  }
+
+  public UserBasedRateLimitInterceptor(int requestPerHour, RateLimiter<String> userBasedRateLimiter) {
+    this.requestPerHour = requestPerHour;
     this.userBasedRateLimiter = userBasedRateLimiter;
   }
 
@@ -28,7 +37,7 @@ public class UserBasedRateLimitInterceptor extends HandlerInterceptorAdapter {
 
     String userId = getUserFromRequest(request);
 
-    logger.info("Receive request for userid: {}, ", userId);
+    logger.info("Receive request for userid: {}, {}, {}", userId, request.getRequestURI(), request.getMethod());
 
     if (!isValidUser(userId)) {
       return false;

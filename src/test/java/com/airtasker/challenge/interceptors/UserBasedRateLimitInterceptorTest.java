@@ -5,7 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-import com.airtasker.challenge.ratelimiter.UserBasedRateLimiter;
+import com.airtasker.challenge.ratelimiter.RateLimiter;
 import javax.servlet.http.Cookie;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,14 +17,14 @@ class UserBasedRateLimitInterceptorTest {
   private UserBasedRateLimitInterceptor userBasedRateLimitInterceptor;
   private MockHttpServletRequest request;
   private MockHttpServletResponse response;
-  private UserBasedRateLimiter userBasedRateLimiter;
+  private RateLimiter userBasedRateLimiter;
 
   @BeforeEach
   public void setup() {
     this.request = new MockHttpServletRequest();
     this.response = new MockHttpServletResponse();
-    this.userBasedRateLimiter = mock(UserBasedRateLimiter.class);
-    this.userBasedRateLimitInterceptor = new UserBasedRateLimitInterceptor(userBasedRateLimiter);
+    this.userBasedRateLimiter = mock(RateLimiter.class);
+    this.userBasedRateLimitInterceptor = new UserBasedRateLimitInterceptor(10, userBasedRateLimiter);
   }
 
   @Test

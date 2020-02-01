@@ -1,11 +1,12 @@
 package com.airtasker.challenge.interceptors;
 
-import com.airtasker.challenge.ratelimiter.IPBasedRateLimiter;
+import com.airtasker.challenge.ratelimiter.RateLimiter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -15,10 +16,18 @@ public class IPBasedRateLimiterInterceptor extends HandlerInterceptorAdapter {
 
   private static final Logger logger = LoggerFactory.getLogger(IPBasedRateLimiterInterceptor.class);
 
-  @Autowired
-  private IPBasedRateLimiter ipBasedRateLimiter;
+  private int requestPerHour;
 
-  public IPBasedRateLimiterInterceptor(IPBasedRateLimiter ipBasedRateLimiter) {
+  private RateLimiter<String> ipBasedRateLimiter;
+
+  @Autowired
+  public IPBasedRateLimiterInterceptor(@Value("${ratelimiter.ipbased.limit}") final int requestPerHour) {
+    this.requestPerHour = requestPerHour;
+    this.ipBasedRateLimiter = new RateLimiter<>(requestPerHour);
+  }
+
+  public IPBasedRateLimiterInterceptor(int requestPerHour, RateLimiter<String> ipBasedRateLimiter){
+    this.requestPerHour = requestPerHour;
     this.ipBasedRateLimiter = ipBasedRateLimiter;
   }
 
@@ -27,7 +36,7 @@ public class IPBasedRateLimiterInterceptor extends HandlerInterceptorAdapter {
 
     String ipAddress = getClientIpAddress(request);
 
-    logger.info("Receive request from {}, ", ipAddress);
+    logger.info("Receive request for userid: {}, {}, {}", ipAddress, request.getRequestURI(), request.getMethod());
 
     if (ipAddress == null) {
       return false;
