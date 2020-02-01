@@ -32,10 +32,3 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
-bootRun {
-    environment = [
-            'IP_BASED_LIMIT_PER_HOUR'  : '10',
-            'USER_BASED_LIMIT_PER_HOUR': '10',
-    ]
-}

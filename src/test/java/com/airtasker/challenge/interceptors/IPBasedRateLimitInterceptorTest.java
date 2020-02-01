@@ -5,44 +5,44 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 
-import com.airtasker.challenge.ratelimiter.RateLimiter;
+import com.airtasker.challenge.ratelimit.RateLimit;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-class IPBasedRateLimiterInterceptorTest {
+class IPBasedRateLimitInterceptorTest {
 
   private IPBasedRateLimiterInterceptor ipBasedRateLimiterInterceptor;
   private MockHttpServletRequest request;
   private MockHttpServletResponse response;
-  private RateLimiter<String> ipBasedRateLimiter;
+  private RateLimit<String> ipBasedRateLimit;
 
   @BeforeEach
   public void setup() {
     this.request = new MockHttpServletRequest();
     this.response = new MockHttpServletResponse();
-    this.ipBasedRateLimiter = mock(RateLimiter.class);
-    this.ipBasedRateLimiterInterceptor = new IPBasedRateLimiterInterceptor(10, ipBasedRateLimiter);
+    this.ipBasedRateLimit = mock(RateLimit.class);
+    this.ipBasedRateLimiterInterceptor = new IPBasedRateLimiterInterceptor(10, ipBasedRateLimit);
   }
 
   @Test
   public void preHandleShouldReturnTrueWhenFirstIPDoesNotReachTheLimit() throws Exception{
-    when(ipBasedRateLimiter.allowRequest("127.0.0.1")).thenReturn(true);
+    when(ipBasedRateLimit.allowRequest("127.0.0.1")).thenReturn(true);
     assertThat(ipBasedRateLimiterInterceptor.preHandle(request, response,null), Is.is(true));
   }
 
   @Test
   public void preHandleShouldReturnFalseWhenFirstIPReachesTheLimit() throws Exception{
-    when(ipBasedRateLimiter.allowRequest("127.0.0.1")).thenReturn(false);
+    when(ipBasedRateLimit.allowRequest("127.0.0.1")).thenReturn(false);
     assertThat(ipBasedRateLimiterInterceptor.preHandle(request, response,null), Is.is(false));
   }
 
   @Test
   public void preHandleShouldReturnTrueForIPTwoWhenFirstIPReachesTheLimit() throws Exception {
-    when(ipBasedRateLimiter.allowRequest("127.0.0.1")).thenReturn(false);
-    when(ipBasedRateLimiter.allowRequest("127.0.0.2")).thenReturn(true);
+    when(ipBasedRateLimit.allowRequest("127.0.0.1")).thenReturn(false);
+    when(ipBasedRateLimit.allowRequest("127.0.0.2")).thenReturn(true);
     request.setRemoteAddr("127.0.0.2");
     assertThat(ipBasedRateLimiterInterceptor.preHandle(request, response,null), Is.is(true));
   }

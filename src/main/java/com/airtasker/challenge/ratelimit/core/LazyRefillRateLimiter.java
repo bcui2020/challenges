@@ -1,8 +1,8 @@
-package com.airtasker.challenge.ratelimiter.core;
+package com.airtasker.challenge.ratelimit.core;
 
 import java.time.Clock;
 
-public class LazyRefillRateLimiter<T> implements Comparable<LazyRefillRateLimiter> {
+public class LazyRefillRateLimiter<T> implements Comparable<LazyRefillRateLimiter>, RateLimiter {
 
   private T id;
 
@@ -46,6 +46,7 @@ public class LazyRefillRateLimiter<T> implements Comparable<LazyRefillRateLimite
     this.lastRefillTime = clock.millis();
   }
 
+  @Override
   public boolean allow() {
     return allow(DEFAULT_TOKEN_PER_REQUEST);
   }
@@ -74,6 +75,7 @@ public class LazyRefillRateLimiter<T> implements Comparable<LazyRefillRateLimite
     }
   }
 
+  @Override
   public long waitTime() {
     return waitTime(DEFAULT_TOKEN_PER_REQUEST);
   }

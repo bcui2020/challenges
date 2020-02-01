@@ -1,4 +1,4 @@
-package com.airtasker.challenge.ratelimiter.core;
+package com.airtasker.challenge.ratelimit.core;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 

@@ -1,7 +1,7 @@
-package com.airtasker.challenge.ratelimiter;
+package com.airtasker.challenge.ratelimit;
 
 
-import com.airtasker.challenge.ratelimiter.core.LazyRefillRateLimiter;
+import com.airtasker.challenge.ratelimit.core.LazyRefillRateLimiter;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
@@ -10,9 +10,9 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RateLimiter<T> {
+public class RateLimit<T> {
 
-  private static final Logger logger = LoggerFactory.getLogger(RateLimiter.class);
+  private static final Logger logger = LoggerFactory.getLogger(RateLimit.class);
 
   private ConcurrentHashMap<T, LazyRefillRateLimiter> rateLimiterMap;
 
@@ -26,7 +26,7 @@ public class RateLimiter<T> {
 
   private static final int TEN = 10;
 
-  public RateLimiter(int requestLimitPerHour) {
+  public RateLimit(int requestLimitPerHour) {
     this.requestLimitPerHour = requestLimitPerHour;
     this.rateLimiterMap = new ConcurrentHashMap<>();
     this.rateLimitersQueue = new PriorityBlockingQueue<>();
@@ -35,7 +35,7 @@ public class RateLimiter<T> {
   }
 
   private void setupCleanUpProcess() {
-    synchronized (RateLimiter.class) {
+    synchronized (RateLimit.class) {
       cleanUpExpiredPool.scheduleAtFixedRate(() -> {
         long now = System.currentTimeMillis();
         logger.info("Start clean up process");

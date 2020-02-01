@@ -1,6 +1,6 @@
 package com.airtasker.challenge.interceptors;
 
-import com.airtasker.challenge.ratelimiter.RateLimiter;
+import com.airtasker.challenge.ratelimit.RateLimit;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -18,17 +18,17 @@ public class IPBasedRateLimiterInterceptor extends HandlerInterceptorAdapter {
 
   private int requestPerHour;
 
-  private RateLimiter<String> ipBasedRateLimiter;
+  private RateLimit<String> ipBasedRateLimit;
 
   @Autowired
   public IPBasedRateLimiterInterceptor(@Value("${ratelimiter.ipbased.limit}") final int requestPerHour) {
     this.requestPerHour = requestPerHour;
-    this.ipBasedRateLimiter = new RateLimiter<>(requestPerHour);
+    this.ipBasedRateLimit = new RateLimit<>(requestPerHour);
   }
 
-  public IPBasedRateLimiterInterceptor(int requestPerHour, RateLimiter<String> ipBasedRateLimiter){
+  public IPBasedRateLimiterInterceptor(int requestPerHour, RateLimit<String> ipBasedRateLimit){
     this.requestPerHour = requestPerHour;
-    this.ipBasedRateLimiter = ipBasedRateLimiter;
+    this.ipBasedRateLimit = ipBasedRateLimit;
   }
 
   @Override
@@ -42,10 +42,10 @@ public class IPBasedRateLimiterInterceptor extends HandlerInterceptorAdapter {
       return false;
     }
 
-    boolean allowAccess = ipBasedRateLimiter.allowRequest(ipAddress);
+    boolean allowAccess = ipBasedRateLimit.allowRequest(ipAddress);
 
     if (!allowAccess) {
-      long waitTime = ipBasedRateLimiter.getWaitTime(ipAddress);
+      long waitTime = ipBasedRateLimit.getWaitTime(ipAddress);
 
       logger.info("Block request for {} for too many request", ipAddress);
 

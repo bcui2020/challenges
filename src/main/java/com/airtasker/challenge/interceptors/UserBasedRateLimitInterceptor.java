@@ -1,6 +1,6 @@
 package com.airtasker.challenge.interceptors;
 
-import com.airtasker.challenge.ratelimiter.RateLimiter;
+import com.airtasker.challenge.ratelimit.RateLimit;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,17 +19,17 @@ public class UserBasedRateLimitInterceptor extends HandlerInterceptorAdapter {
 
   private int requestPerHour;
 
-  private RateLimiter<String> userBasedRateLimiter;
+  private RateLimit<String> userBasedRateLimit;
 
   @Autowired
   public UserBasedRateLimitInterceptor(@Value("${ratelimiter.userbased.limit}") final int requestPerHour) {
     this.requestPerHour = requestPerHour;
-    this.userBasedRateLimiter = new RateLimiter<>(requestPerHour);
+    this.userBasedRateLimit = new RateLimit<>(requestPerHour);
   }
 
-  public UserBasedRateLimitInterceptor(int requestPerHour, RateLimiter<String> userBasedRateLimiter) {
+  public UserBasedRateLimitInterceptor(int requestPerHour, RateLimit<String> userBasedRateLimit) {
     this.requestPerHour = requestPerHour;
-    this.userBasedRateLimiter = userBasedRateLimiter;
+    this.userBasedRateLimit = userBasedRateLimit;
   }
 
   @Override
@@ -43,10 +43,10 @@ public class UserBasedRateLimitInterceptor extends HandlerInterceptorAdapter {
       return false;
     }
 
-    boolean allowAccess = userBasedRateLimiter.allowRequest(userId);
+    boolean allowAccess = userBasedRateLimit.allowRequest(userId);
 
     if (!allowAccess) {
-      long waitTime = userBasedRateLimiter.getWaitTime(userId);
+      long waitTime = userBasedRateLimit.getWaitTime(userId);
 
       logger.info("Block request for user: {} for too many request", userId);
 
